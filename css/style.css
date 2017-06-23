@@ -1,0 +1,42 @@
+
+.back{
+	position: fixed;
+	z-index: -1;
+
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+
+	background-image:url(../img/back.jpg);
+	background-size: cover;
+}
+
+body{	
+	padding: 25px;	
+}
+
+.myfont,a{
+	font-family: 'Pangolin', cursive;
+	color:white;
+}
+
+input{
+	color:brown;
+}
+.main-menu{
+
+
+}
+.main-menu .choice{
+	border-radius: 25px;
+	padding: 25px;
+
+	background-color: rgba(0,0,0,0.5);
+
+	width: 20%;
+	height: 450px;
+
+	float: left;
+	margin-right: 25px; 
+}

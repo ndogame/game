@@ -1,0 +1,19 @@
+.user-info{
+	font-size: 14pt;
+}
+.info-row{
+
+}
+.val{
+font-weight: 900;
+}
+.val-name{
+color:lightgreen;
+}
+.val-gold{
+	color:yellow;
+}
+.val-hp{
+	color:red;
+
+}
