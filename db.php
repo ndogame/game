@@ -79,4 +79,20 @@ function getUser($id){
 		}
 		return $user;
 	}
+
+function getUserFactory($id)
+{
+	//
+	global $mysqli;
+		$query = "SELECT factory.id,factory.name,factory.text,factory.src,factory.gold, (select COUNT(*) from user_factory where user_factory.id_factory = factory.id AND user_factory.id_user = $id) as is_hew FROM `factory`"; 
+
+		$result = $mysqli->query($query); 
+		
+	
+		$mass;
+		while ($row = $result->fetch_assoc()) {		
+			$mass[] = $row;	    
+		}
+			return $mass;
+}
 ?>
