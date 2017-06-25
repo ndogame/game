@@ -95,4 +95,63 @@ function getUserFactory($id)
 		}
 			return $mass;
 }
+function byefactory($id_factory)
+{
+	global $mysqli;
+		$user = getUserByLogin($_SESSION["user"]["name"]);
+
+		$query = "SELECT * FROM factory WHERE id=".$id_factory;
+		$result = $mysqli->query($query); 
+		$factory = null;
+		while ($row = $result->fetch_assoc()) {
+			$factory = $row;
+			break;		    
+		}
+
+	if($user["gold"]>=$factory["gold"]) 
+	{
+
+		$query = "SELECT * FROM user_factory WHERE id_user=".$user["id"] . " AND id_factory=" . $id_factory ;
+		$result = $mysqli->query($query); 
+		$f = null;
+		while ($row = $result->fetch_assoc()) {
+			$f = $row;
+			break;		    
+		}
+		if(count($f)!= 0)
+			return;
+
+		// требуеться проверка на уже купленную
+		$query = "INSERT INTO `user_factory` (`id`, `id_user`, `id_factory`) VALUES (NULL, " . $user["id"] . ", " . $factory["id"] . ");"; 
+
+		$result = $mysqli->query($query); 
+
+
+		
+		$query = "UPDATE `users` SET `gold` = gold - " . $factory["gold"] . " WHERE `users`.`id` = " . $user["id"]; 
+
+		$result = $mysqli->query($query); 
+
+
+		$_SESSION["user"] = getUserByLogin($_SESSION["user"]["name"]);
+	}
+	
+
+}
+function getCraftsFromFactory($id_factory)
+{
+	//SELECT items.id,items.name,items.discript,items.src,items.event_colus,items.drop_colus,craft.gold,(SELECT COUNT(*) FROM user_items WHERE user_items.id_items = items.id AND user_items.id_user = 1) as is_have ,(SELECT SUM(users.gold) >= craft.gold FROM users WHERE users.id = 1) as can_bye FROM craft INNER JOIN items ON items.id = craft.id_item WHERE id_factory = 1 ORDER BY is_have,can_bye ASC
+	global $mysqli;
+	$user_id = $_SESSION["user"]["id"];
+		$query = "SELECT items.id,items.name,items.discript,items.src,items.event_colus,items.drop_colus,craft.gold,(SELECT COUNT(*) FROM user_items WHERE user_items.id_items = items.id AND user_items.id_user = $user_id) as is_have ,(SELECT SUM(users.gold) >= craft.gold FROM users WHERE users.id = $user_id) as can_bye FROM craft INNER JOIN items ON items.id = craft.id_item WHERE id_factory = $id_factory ORDER BY is_have,can_bye ASC" ; 
+
+		$result = $mysqli->query($query); 
+		
+	
+		$mass;
+		while ($row = $result->fetch_assoc()) {		
+			$mass[] = $row;	    
+		}
+			return $mass;
+}
 ?>

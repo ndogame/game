@@ -1,7 +1,10 @@
 <?php 
 session_start();
 include_once("db.php");
-
+if(isset($_GET["bye"]))
+{
+	byefactory($_GET["bye"]);
+}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
 <html lang="en">
@@ -40,7 +43,7 @@ include_once("db.php");
 				 echo '<a href="http://ndogame/game/craft.php?bye='. $value['id'] . '">';
 				}
 				else {
-				 echo '<a href="http://ndogame/game/craft.php?show='. $value['id'] . '">';
+				 echo '<a href="http://ndogame/game/craft-shower.php?show='. $value['id'] . '">';
 				}
 				?>
 			<div class="choice" style="display: inline-block; width: 300px; height: 300px; float: none;margin: 5px">
