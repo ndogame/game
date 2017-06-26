@@ -1,7 +1,10 @@
 <?php 
 session_start();
 include_once("db.php");
-
+if(isset($_GET["bye"]))
+{
+	 upgraideItem($_GET["bye"]);
+}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
 <html lang="en">
@@ -33,7 +36,13 @@ include_once("db.php");
 	<?php
 	$value = getCraftsFromFactory($_GET["show"]);
 	 for ($i=count($value)-1; $i >= 0; $i--): ?>
-				<div class="choice" style="display: inline-block; width: 300px; height: 300px; float: none;margin: 5px">
+	 			<?php
+				if($value[$i]['is_have'] != 0 && $value[$i]['can_bye'] != 0 )
+				{
+					echo '<a href="http://ndogame/game/craft-shower.php?show=' . $_GET["show"] . '&bye='. $value[$i]['id'] . '">';
+				}
+	 			 ?>
+				<div class="choice" style="display: inline-block; width: 300px; height: 300px; float: none; word-break: break-all; margin: 5px">
 
 
 				<img style="width: 200px; height: 100px;" src="<?php echo $value[$i]['src']; ?>" />
@@ -55,6 +64,7 @@ include_once("db.php");
 				}
 				?>
 			</div>
+			</a>
 	<?php endfor; ?>
 	</div>
 

@@ -143,7 +143,7 @@ function getCraftsFromFactory($id_factory)
 	//SELECT items.id,items.name,items.discript,items.src,items.event_colus,items.drop_colus,craft.gold,(SELECT COUNT(*) FROM user_items WHERE user_items.id_items = items.id AND user_items.id_user = 1) as is_have ,(SELECT SUM(users.gold) >= craft.gold FROM users WHERE users.id = 1) as can_bye FROM craft INNER JOIN items ON items.id = craft.id_item WHERE id_factory = 1 ORDER BY is_have,can_bye ASC
 	global $mysqli;
 	$user_id = $_SESSION["user"]["id"];
-		$query = "SELECT items.id,items.name,items.discript,items.src,items.event_colus,items.drop_colus,craft.gold,(SELECT COUNT(*) FROM user_items WHERE user_items.id_items = items.id AND user_items.id_user = $user_id) as is_have ,(SELECT SUM(users.gold) >= craft.gold FROM users WHERE users.id = $user_id) as can_bye FROM craft INNER JOIN items ON items.id = craft.id_item WHERE id_factory = $id_factory ORDER BY is_have,can_bye ASC" ; 
+		$query = "SELECT craft.id,items.name,items.discript,items.src,items.event_colus,items.drop_colus,craft.gold,(SELECT COUNT(*) FROM user_items WHERE user_items.id_items = items.id AND user_items.id_user = $user_id) as is_have ,(SELECT SUM(users.gold) >= craft.gold FROM users WHERE users.id = $user_id) as can_bye FROM craft INNER JOIN items ON items.id = craft.id_item WHERE id_factory = $id_factory ORDER BY is_have,can_bye ASC" ; 
 
 		$result = $mysqli->query($query); 
 		
@@ -153,5 +153,41 @@ function getCraftsFromFactory($id_factory)
 			$mass[] = $row;	    
 		}
 			return $mass;
+}
+ function upgraideItem($id_resp)
+{
+	global $mysqli;
+	global $mysqli;
+		$user = getUserByLogin($_SESSION["user"]["name"]);
+
+		$query = "SELECT * FROM craft WHERE id=".$id_resp;
+		$result = $mysqli->query($query); 
+		$factory = null;
+		while ($row = $result->fetch_assoc()) {
+			$factory = $row;
+			break;		    
+		}
+
+	if($user["gold"]>=$factory["gold"]) 
+	{
+		$query = "SELECT * FROM user_items WHERE id_items=" . $factory["id_item"] . " AND id_user=" . $user["id"];
+		
+		$result = $mysqli->query($query); 
+		$item = null;
+		while ($row = $result->fetch_assoc()) {
+			$item = $row;
+			break;		    
+		}
+		if($item != null)
+		{
+			$query = "UPDATE `user_items` SET lvl = lvl +1 WHERE id_items=" . $factory["id_item"] . " AND id_user=" . $user["id"]; 
+			$result = $mysqli->query($query); 
+
+
+			$query = "UPDATE `users` SET `gold` = gold - " . $factory["gold"] . "  WHERE  users.id = " . $user["id"]; 
+			$result = $mysqli->query($query); 
+			$_SESSION["user"] = getUserByLogin($_SESSION["user"]["name"]);
+		}
+	}
 }
 ?>
